@@ -43,7 +43,9 @@
 -- #													  H '1,2,3,4 min target '	
 -- #                                                      I '3 lognest flights'
 -- #                                                      J '3 last flights'   
--- #                                                     TT 'Training Task'        
+-- #                                                     TT 'Training Task' 
+-- # V1.0.3 - Bugfixing changed all global to local variables
+-- #        - Moved all F3K Audio files into app specific F3K/audio folder       
 -- #############################################################################
 
 --Configuration
@@ -51,35 +53,39 @@
 local appLoaded = false
 local main_lib = nil  -- lua main script
 local initDelay = 0
-F3K_Version="V1.0.2"
-mem = 0
-debugmem = 0
-initScreenIDF3K = 2 -- id of tool screen
-taskScreenIDF3K = 1 -- id of task screen
-currentFormF3K = nil -- current display
-langF3K={}
-currentTaskF3K=12    --Index tasklist of last training default is FF (free flights task)
-cfgStartFrameSwitchF3K=nil --configured start frame time switch
-cfgStartFlightSwitchF3K=nil --configured start flight time switch
-cfgStoppFlightSwitchF3K=nil --configured stopp flight time switch
-cfgFrameAudioSwitchF3K=nil --configured audio output switch for remaining frame time
-cfgTimerResetSwitchF3K=nil --switch for store current training and reset timers
-cfgFlightCountDownSwitchF3K=nil --switch for starting flight count down of poker tasks
-cfgFrameTimeF3K=nil --Frame time of all F3K training tasks in seconds
-cfgPreFrameTimeF3K=10 -- count down time before start of frame timer
-cfgTargetTimeF3K=30 -- flight target tim for TF task (training flights) 
-currentTimeF3K=nil --current timestamp in milliseconds
-frameTimerF3K = 0 -- contains current frame time
-colorScreenF3K = false -- display type true for dc\ds 24 otherwise false
-prevSoundTimeF3K = 0	   --previous time for audio output
-soundTimeF3K = 0		   --calculated time for audio output
-flightIndexOffsetScreenF3K = 0 -- for display if more than 8 flights in list
-flightIndexScrollScreenF3K = 0 -- for scrolling up and down if more than 8 flights in list
-cfgAudioFlights = nil -- number of audio output best flights in order for tasks F,G,H,I,J
+local globVar ={
+				F3K_Version="V1.0.3",
+				mem = 0,
+				debugmem = 0,
+				initScreenIDF3K = 2, -- id of tool screen
+				taskScreenIDF3K = 1, -- id of task screen
+				currentFormF3K = nil, -- current display
+				langF3K={},
+				currentTaskF3K=12,    --Index tasklist of last training default is FF (free flights task)
+				cfgStartFrameSwitchF3K=nil, --configured start frame time switch
+				cfgStartFlightSwitchF3K=nil, --configured start flight time switch
+				cfgStoppFlightSwitchF3K=nil, --configured stopp flight time switch
+				cfgFrameAudioSwitchF3K=nil, --configured audio output switch for remaining frame time
+				cfgTimerResetSwitchF3K=nil, --switch for store current training and reset timers
+				cfgFlightCountDownSwitchF3K=nil, --switch for starting flight count down of poker tasks
+				cfgFrameTimeF3K=nil, --Frame time of all F3K training tasks in seconds
+				cfgPreFrameTimeF3K=10, -- count down time before start of frame timer
+				cfgTargetTimeF3K=30, -- flight target tim for TF task (training flights) 
+				currentTimeF3K=nil, --current timestamp in milliseconds
+				frameTimerF3K = 0, -- contains current frame time
+				colorScreenF3K = false, -- display type true for dc\ds 24 otherwise false
+				prevSoundTimeF3K = 0,	   --previous time for audio output
+				soundTimeF3K = 0,		   --calculated time for audio output
+				flightIndexOffsetScreenF3K = 0, -- for display if more than 8 flights in list
+				flightIndexScrollScreenF3K = 0, -- for scrolling up and down if more than 8 flights in list
+				cfgAudioFlights = nil -- number of audio output best flights in order for tasks F,G,H,I,J
+			  }
+
 
 
 -------------------------------------------------------------------- 
--- Initialization
+-- Initialization138
+
 --------------------------------------------------------------------
 local function init(code)
 	if(initDelay == 0)then
@@ -87,7 +93,7 @@ local function init(code)
 	end	
 	if(main_lib ~= nil) then
 		local func = main_lib[2]
-		func(0) --init(0)
+		func(0,globVar) --init(0)
 	end
 end
 
@@ -110,13 +116,13 @@ end
 -- main Loop function
 --------------------------------------------------------------------
 local function loop() 
-	currentTimeF3K = system.getTimeCounter()
+	globVar.currentTimeF3K = system.getTimeCounter()
 	 -- load current task
     if(main_lib == nil)then
 		init(0)
 		if((system.getTimeCounter() - initDelay > 5000)and(initDelay ~=0)) then
 			if(appLoaded == false)then
-				local memTxt = "max: "..mem.."K act: "..debugmem.."K"
+				local memTxt = "max: "..globVar.mem.."K act: "..globVar.debugmem.."K"
 				print(memTxt)
 				main_lib = require("F3K/Tasks/F3K_Main")
 				if(main_lib ~= nil)then
@@ -131,9 +137,9 @@ local function loop()
 		local func = main_lib[4] --loop()
 		func() -- execute main loop
 	end	
-	debugmem = math.modf(collectgarbage('count'))
-	if (mem < debugmem) then
-		mem = debugmem
+	globVar.debugmem = math.modf(collectgarbage('count'))
+	if (globVar.mem < globVar.debugmem) then
+		globVar.mem = globVar.debugmem
 	end
 end
  

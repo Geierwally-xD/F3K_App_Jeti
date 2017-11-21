@@ -1,4 +1,4 @@
-@REM Installation of F3K Training App V1.0.2 on Jeti Transmitters
+@REM Installation of F3K Training App V1.0.3 on Jeti Transmitters
 @echo off
 @echo ================================
 @echo connection  transmitter
@@ -66,8 +66,6 @@ md Logs
 endlocal
 XCOPY /S apps\f3k %transmitter%:\apps\f3k
 copy apps\F3K.lc %transmitter%:\apps
-copy audio\de\F3K*.wav %transmitter%:\audio\de
-copy audio\en\F3K*.wav %transmitter%:\audio\en
 
 @echo ================================
 @echo installation successful finished
