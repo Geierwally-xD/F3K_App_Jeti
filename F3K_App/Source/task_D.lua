@@ -282,8 +282,10 @@ end
 local function task_D_End()     -- safe training?
 	prevFrameAudioSwitchF3K = 1 -- lock audio output remaining frame time
 	if(1==system.getInputsVal(globVar.cfgTimerResetSwitchF3K)) then
-		storeTask()
-		resetTask()
+		local func = globVar.storeTask
+		func()
+		local func = globVar.resetTask
+		func()
 	end
 end
 --------------------------------------------------------------------

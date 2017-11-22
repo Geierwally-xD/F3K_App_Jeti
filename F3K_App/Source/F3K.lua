@@ -53,6 +53,7 @@
 local appLoaded = false
 local main_lib = nil  -- lua main script
 local initDelay = 0
+
 local globVar ={
 				F3K_Version="V1.0.3",
 				mem = 0,
@@ -78,10 +79,20 @@ local globVar ={
 				soundTimeF3K = 0,		   --calculated time for audio output
 				flightIndexOffsetScreenF3K = 0, -- for display if more than 8 flights in list
 				flightIndexScrollScreenF3K = 0, -- for scrolling up and down if more than 8 flights in list
-				cfgAudioFlights = nil -- number of audio output best flights in order for tasks F,G,H,I,J
+				cfgAudioFlights = nil, -- number of audio output best flights in order for tasks F,G,H,I,J
+				resetTask = function()
+					if(main_lib ~= nil) then
+						local func = main_lib[1] --resetTask_()
+						func(0) --resetTask_
+					end
+				end,
+				storeTask = function()
+					if(main_lib ~= nil) then
+						local func = main_lib[3] --storeTask_()
+						func(0)
+					end
+				end,
 			  }
-
-
 
 -------------------------------------------------------------------- 
 -- Initialization138
@@ -96,21 +107,6 @@ local function init(code)
 		func(0,globVar) --init(0)
 	end
 end
-
-function resetTask()
-	if(main_lib ~= nil) then
-		local func = main_lib[1] --resetTask_()
-		func(0) --resetTask_
-	end
-end
-
-function storeTask()
-	if(main_lib ~= nil) then
-		local func = main_lib[3] --storeTask_()
-		func(0)
-	end
-end
-
 
 --------------------------------------------------------------------
 -- main Loop function

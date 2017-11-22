@@ -322,8 +322,10 @@ local function task_C_End()     -- safe training?
 	taskStartSwitchedF3K = false
 	if(1==system.getInputsVal(globVar.cfgTimerResetSwitchF3K)) then
 		if(preSwitchTaskResetF3K == false)then
-			storeTask()
-			resetTask()
+			local func = globVar.storeTask
+			func()
+			local func = globVar.resetTask
+			func()
 		end
 	else
 		preSwitchTaskResetF3K = false

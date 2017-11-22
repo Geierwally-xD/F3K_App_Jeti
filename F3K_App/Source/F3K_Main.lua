@@ -65,7 +65,7 @@ end
 -------------------------------------------------------------------- 
 -- Initialization
 --------------------------------------------------------------------
-local function resetTask_()
+local function resetTask_(unloadTask)
   globVar.frameTimerF3K = globVar.cfgFrameTimeF3K[globVar.currentTaskF3K] --preset frame timer with configured value
   tDateF3K = system.getDateTime()
   globVar.prevSoundTimeF3K = 0	   --previous time for audio output
@@ -75,8 +75,9 @@ local function resetTask_()
   failedFlightsF3K = nil --list of failed flights
   goodFlightsF3K = nil --list of all good flights
   preSwitchTaskResetF3K = false --logic for reset task switch (for tasks with combined stopp and reset functionality e.g. task A and B)
+
+  if(unloadTask == 1)then	
   taskCharF3K = nil
-  
   if(task_lib ~= nil)then
 	package.loaded[task_Path]=nil
 	_G[task_Path]=nil
@@ -148,6 +149,7 @@ local function resetTask_()
   else
 	taskCharF3K = "  "
   end
+  end ----------------
   if(task_lib ~=nil)then
   	local func = task_lib[1]  --init() 
 	func(globVar) -- execute specific initializer
@@ -180,7 +182,7 @@ local function init(code,globVar_)
 	else
 		globVar.currentTaskF3K = 15 -- unload task lib
 	end
-	resetTask_()
+	resetTask_(1)
 end
 
 local function frameTimeChanged(value)
@@ -229,7 +231,7 @@ local function timerResetSwitchChanged(value)
 end
 local function taskChanged()
   globVar.currentTaskF3K=form.getValue(taskBox)
-  resetTask_()
+  resetTask_(1)
   system.pSave("currentTask",globVar.currentTaskF3K)
   form.setTitle("Task "..taskCharF3K.."  "..taskList[globVar.currentTaskF3K])
   form.reinit(globVar.initScreenIDF3K)
