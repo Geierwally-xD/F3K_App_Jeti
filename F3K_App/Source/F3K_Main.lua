@@ -70,86 +70,81 @@ local function resetTask_(unloadTask)
   tDateF3K = system.getDateTime()
   globVar.prevSoundTimeF3K = 0	   --previous time for audio output
   globVar.soundTimeF3K = 0		   --calculated time for audio output
-  flightTimeF3K = 0
-  breakTimeF3K = 0
-  failedFlightsF3K = nil --list of failed flights
-  goodFlightsF3K = nil --list of all good flights
-  preSwitchTaskResetF3K = false --logic for reset task switch (for tasks with combined stopp and reset functionality e.g. task A and B)
 
   if(unloadTask == 1)then	
-  taskCharF3K = nil
-  if(task_lib ~= nil)then
-	package.loaded[task_Path]=nil
-	_G[task_Path]=nil
-	task_lib = nil
-	task_Path = nil
-	collectgarbage('collect')
-  end	
-  -- load current task
+	taskCharF3K = nil
+	if(task_lib ~= nil)then
+		package.loaded[task_Path]=nil
+		_G[task_Path]=nil
+		task_lib = nil
+		task_Path = nil
+		collectgarbage('collect')
+	end	
+	-- load current task
   
-  if(task_lib == nil)then 
-	if(globVar.currentTaskF3K == 1)then -- last flight
-		task_Path = "F3K/Tasks/task_A"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 2)then -- next to last flight
-		task_Path = "F3K/Tasks/task_B"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 3)then -- all up last down
-		task_Path = "F3K/Tasks/task_C"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 4)then --ladder
-		task_Path = "F3K/Tasks/task_D"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 5)then --poker
-		task_Path = "F3K/Tasks/task_E"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 6)then --3 out of 6
-		task_Path = "F3K/Tasks/task_F"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 7)then --5 longest flights
-		task_Path = "F3K/Tasks/task_G"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 8)then --1,2,3,4 min target 
-		task_Path = "F3K/Tasks/task_H"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 9)then --3 lognest flights
-		task_Path = "F3K/Tasks/task_I"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 10)then --3 last flights
-		task_Path = "F3K/Tasks/task_J"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 11)then -- big ladder
-		task_Path = "F3K/Tasks/task_K"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 12)then -- free flight
-		task_Path = "F3K/Tasks/task_FF"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 13)then -- trainings statisic task
-		task_Path = "F3K/Tasks/task_TS"
-		task_lib = require(task_Path)
-    elseif(globVar.currentTaskF3K == 14)then -- trainings flight task
-		task_Path = "F3K/Tasks/task_TF"
-		task_lib = require(task_Path)
-	elseif(globVar.currentTaskF3K == 15)then -- empty task, necessary for loading on startup to avoid storage lack
-	    -- nothing to do
-	else	-- free flight is default task
-		globVar.currentTaskF3K = 12
-		task_Path = "F3K/Tasks/task_FF"
-		task_lib = require(task_Path)	
+	if(task_lib == nil)then 
+		if(globVar.currentTaskF3K == 1)then -- last flight
+			task_Path = "F3K/Tasks/task_A"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 2)then -- next to last flight
+			task_Path = "F3K/Tasks/task_B"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 3)then -- all up last down
+			task_Path = "F3K/Tasks/task_C"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 4)then --ladder
+			task_Path = "F3K/Tasks/task_D"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 5)then --poker
+			task_Path = "F3K/Tasks/task_E"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 6)then --3 out of 6
+			task_Path = "F3K/Tasks/task_F"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 7)then --5 longest flights
+			task_Path = "F3K/Tasks/task_G"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 8)then --1,2,3,4 min target 
+			task_Path = "F3K/Tasks/task_H"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 9)then --3 lognest flights
+			task_Path = "F3K/Tasks/task_I"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 10)then --3 last flights
+			task_Path = "F3K/Tasks/task_J"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 11)then -- big ladder
+			task_Path = "F3K/Tasks/task_K"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 12)then -- free flight
+			task_Path = "F3K/Tasks/task_FF"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 13)then -- trainings statisic task
+			task_Path = "F3K/Tasks/task_TS"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 14)then -- trainings flight task
+			task_Path = "F3K/Tasks/task_TF"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 15)then -- empty task, necessary for loading on startup to avoid storage lack
+			-- nothing to do
+		else	-- free flight is default task
+			globVar.currentTaskF3K = 12
+			task_Path = "F3K/Tasks/task_FF"
+			task_lib = require(task_Path)	
+		end
 	end
-  end
-  if(globVar.currentTaskF3K < 12)then
-	taskCharF3K = string.char(labelChar+globVar.currentTaskF3K-1)
-  elseif(globVar.currentTaskF3K == 12)then 
-	taskCharF3K = "FF"
-  elseif(globVar.currentTaskF3K == 13)then 
-	taskCharF3K = "TS"
-  elseif(globVar.currentTaskF3K == 14)then 
-	taskCharF3K = "TF"
-  else
-	taskCharF3K = "  "
-  end
-  end ----------------
+	if(globVar.currentTaskF3K < 12)then
+		taskCharF3K = string.char(labelChar+globVar.currentTaskF3K-1)
+	elseif(globVar.currentTaskF3K == 12)then 
+		taskCharF3K = "FF"
+	elseif(globVar.currentTaskF3K == 13)then 
+		taskCharF3K = "TS"
+	elseif(globVar.currentTaskF3K == 14)then 
+		taskCharF3K = "TF"
+	else
+		taskCharF3K = "  "
+	end
+  end -- unloadTask==1
   if(task_lib ~=nil)then
   	local func = task_lib[1]  --init() 
 	func(globVar) -- execute specific initializer
@@ -287,9 +282,9 @@ local function keyPressedTasks(key)
 		form.reinit(globVar.initScreenIDF3K)
 	elseif(key==KEY_2)then
 	-- reset all timers and set task to start state
-		resetTask()
+		resetTask_(0)
 	elseif(key==KEY_3)then
-		storeTask()
+		storeTask_()
 	-- write task informations into file
 	elseif(key==KEY_UP)then
 	-- scroll up flight screen if more than 8 flights in list
