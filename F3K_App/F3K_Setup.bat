@@ -6,7 +6,7 @@
 @echo connect your transmitter USB and type in the drive letter e.g. E
 @Set /P transmitter=SET transmitter:
 @echo ================================
-IF not exist %transmitter%:\Model\*.* goto  FAILPATH
+IF not exist %transmitter%:\Model\*.* goto FAILPATH
 setlocal
 %transmitter%:
 IF not exist %transmitter%:\apps\*.* md apps
