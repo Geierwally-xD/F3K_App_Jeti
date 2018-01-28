@@ -7,10 +7,7 @@
 @Set /P transmitter=SET transmitter:
 @echo ================================
 IF not exist %transmitter%:\Model\*.* goto FAILPATH
-setlocal
-%transmitter%:
-IF not exist %transmitter%:\apps\*.* md apps
-endlocal
+IF not exist %transmitter%:\apps\*.* goto FAILLUA
 @echo ================================
 @echo Partial transmitter backup required ?
 @echo ================================
@@ -75,7 +72,9 @@ copy apps\F3K.lc %transmitter%:\apps
 @echo installation successful finished
 @echo ================================
 goto END
-
+:FAILLUA
+@echo Installation failed, missing Lua API. Pls. instal Lua API (download Lua update for your transmitter from jetimodel.com )
+goto END
 :FAILPATH
 @echo Installation failed transmitter is not connected or drive letter for transmitter is not correct
 goto END
