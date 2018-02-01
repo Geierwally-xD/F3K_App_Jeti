@@ -7,3 +7,11 @@ On Installation over App Manager you can download the full installation package 
 https://github.com/Geierwally-xD/F3K_App_Jeti
 See also videoclip demo of the App!
 https://www.youtube.com/watch?v=QTzmk-5AFzs
+
+Geierwally's F3K - Trainings Applikation für Jeti DC/DS 14,16 und 24 Sender.
+Alle Wettkampf - Tasks plus 3 zusätzliche Trainings - Tasks sind implementiert.
+Bitte vor Installation Anwenderdoku lesen und über F3K_Setup.bat bzw. App Manager auf dem Sender installieren.
+Bei Installation über App - Manager kann das komplette Installationspacket mit Anwenderdokumentation und Lua - Skripten hier heruntergeladen werden: 
+https://github.com/Geierwally-xD/F3K_App_Jeti
+Demo Videoclip:
+https://www.youtube.com/watch?v=QTzmk-5AFzs
