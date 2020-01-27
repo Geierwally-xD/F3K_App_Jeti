@@ -45,7 +45,8 @@
 -- #                                                      J '3 last flights'   
 -- #                                                     TT 'Training Task' 
 -- # V1.0.3 - Bugfixing changed all global to local variables
--- #        - Moved all F3K Audio files into app specific F3K/audio folder       
+-- #        - Moved all F3K Audio files into app specific F3K/audio folder 
+-- # V1.0.4 - Support of DS12 Color Display      
 -- #############################################################################
 
 --Configuration
@@ -55,7 +56,7 @@ local main_lib = nil  -- lua main script
 local initDelay = 0
 
 local globVar ={
-				F3K_Version="V1.0.3",
+				F3K_Version="T1.0.4",
 				mem = 0,
 				debugmem = 0,
 				initScreenIDF3K = 2, -- id of tool screen

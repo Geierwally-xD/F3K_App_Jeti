@@ -33,8 +33,10 @@
 -- # V1.0.3 - Bugfixing changed all global to local variables
 -- #        - Moved all F3K Audio files into app specific F3K/audio folder       
 -- # V1.0.3 - Bugfixing changed all global to local variables
--- #        - Moved all F3K Audio files into app specific F3K/audio folder       
--- #############################################################################-- #############################################################################
+-- #        - Moved all F3K Audio files into app specific F3K/audio folder  
+-- # V1.0.4 - Support of DS12 Color Display           
+-- #############################################################################
+-- #############################################################################
 --Configuration
 --Local variables
 local task_lib = nil -- lua script of loaded task
@@ -171,7 +173,7 @@ local function init(code,globVar_)
 				  globVar.langF3K.K,globVar.langF3K.FF,globVar.langF3K.TS,globVar.langF3K.TF} --initialize the task list
 		globVar.cfgAudioFlights = system.pLoad("audioFlights",{3,5,4,3,3,3})  -- number of audio output best flights in order for tasks F,G,H,I,J
 		local deviceType = system.getDeviceType()
-		if(( deviceType == "JETI DC-24")or(deviceTypeF3K == "JETI DS-24"))then
+		if(( deviceType == "JETI DC-24")or(deviceTypeF3K == "JETI DS-24")or(deviceTypeF3K == "JETI DS-12"))then
 			globVar.colorScreenF3K = true -- set display type
 		end
 	else
