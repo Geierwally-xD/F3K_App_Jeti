@@ -1,7 +1,6 @@
 -- ############################################################################# 
 -- # DC/DS F3K Training - Lua application for JETI DC/DS transmitters  
--- #
--- # Copyright (c) 2017, by Geierwally
+-- # Copyright (c) 2020, by Geierwally
 -- # All rights reserved.
 -- #
 -- # Redistribution and use in source and binary forms, with or without
@@ -34,8 +33,7 @@
 -- #        - Moved all F3K Audio files into app specific F3K/audio folder       
 -- # V1.0.3 - Bugfixing changed all global to local variables
 -- #        - Moved all F3K Audio files into app specific F3K/audio folder  
--- # V1.0.4 - Support of DS12 Color Display           
--- #############################################################################
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng          
 -- #############################################################################
 --Configuration
 --Local variables
@@ -109,7 +107,7 @@ local function resetTask_(unloadTask)
 		elseif(globVar.currentTaskF3K == 8)then --1,2,3,4 min target 
 			task_Path = "F3K/Tasks/task_H"
 			task_lib = require(task_Path)
-		elseif(globVar.currentTaskF3K == 9)then --3 lognest flights
+		elseif(globVar.currentTaskF3K == 9)then --3 longest flights
 			task_Path = "F3K/Tasks/task_I"
 			task_lib = require(task_Path)
 		elseif(globVar.currentTaskF3K == 10)then --3 last flights
@@ -118,31 +116,42 @@ local function resetTask_(unloadTask)
 		elseif(globVar.currentTaskF3K == 11)then -- big ladder
 			task_Path = "F3K/Tasks/task_K"
 			task_lib = require(task_Path)
-		elseif(globVar.currentTaskF3K == 12)then -- free flight
-			task_Path = "F3K/Tasks/task_FF"
+		elseif(globVar.currentTaskF3K == 12)then -- training flight with fixed flight time
+			task_Path = "F3K/Tasks/task_L"			
 			task_lib = require(task_Path)
-		elseif(globVar.currentTaskF3K == 13)then -- trainings statisic task
-			task_Path = "F3K/Tasks/task_TS"
+		elseif(globVar.currentTaskF3K == 13)then -- 3 tartget times
+			task_Path = "F3K/Tasks/task_M"			
 			task_lib = require(task_Path)
 		elseif(globVar.currentTaskF3K == 14)then -- trainings flight task
 			task_Path = "F3K/Tasks/task_TF"
 			task_lib = require(task_Path)
-		elseif(globVar.currentTaskF3K == 15)then -- empty task, necessary for loading on startup to avoid storage lack
+		elseif(globVar.currentTaskF3K == 15)then -- trainings statisic task 
+			task_Path = "F3K/Tasks/task_TS"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 16)then -- free flight
+			task_Path = "F3K/Tasks/task_FF"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 17)then -- free flight
+			task_Path = "F3K/Tasks/task_Dold"
+			task_lib = require(task_Path)
+		elseif(globVar.currentTaskF3K == 18)then -- empty task, necessary for loading on startup to avoid storage lack
 			-- nothing to do
 		else	-- free flight is default task
-			globVar.currentTaskF3K = 12
+			globVar.currentTaskF3K = 16
 			task_Path = "F3K/Tasks/task_FF"
 			task_lib = require(task_Path)	
 		end
 	end
-	if(globVar.currentTaskF3K < 12)then
+	if(globVar.currentTaskF3K < 14)then
 		taskCharF3K = string.char(labelChar+globVar.currentTaskF3K-1)
-	elseif(globVar.currentTaskF3K == 12)then 
-		taskCharF3K = "FF"
-	elseif(globVar.currentTaskF3K == 13)then 
-		taskCharF3K = "TS"
 	elseif(globVar.currentTaskF3K == 14)then 
 		taskCharF3K = "TF"
+	elseif(globVar.currentTaskF3K == 15)then 
+		taskCharF3K = "TS"
+	elseif(globVar.currentTaskF3K == 16)then 
+		taskCharF3K = "FF"
+	elseif(globVar.currentTaskF3K == 17)then 
+		taskCharF3K = "Dold"
 	else
 		taskCharF3K = "  "
 	end
@@ -159,7 +168,7 @@ local function init(code,globVar_)
 		globVar = globVar_
 		setLanguage()
 		globVar.currentTaskF3K = system.pLoad("currentTask",1)
-		globVar.cfgFrameTimeF3K = system.pLoad("frameTime",{600,600,3,600,600,600,600,600,600,600,600,600,600,600})--Frame time of all F3K training tasks in seconds
+		globVar.cfgFrameTimeF3K = system.pLoad("frameTime",{600,600,3,600,600,600,600,600,600,600,600,600,900,600,600,600,600})--Frame time of all F3K training tasks in seconds
 		globVar.cfgPreFrameTimeF3K = system.pLoad("preFrameTime",10)
 		globVar.cfgStartFrameSwitchF3K=system.pLoad("frameSwitch")
 		globVar.cfgStartFlightSwitchF3K=system.pLoad("startFlightSwitch")
@@ -167,17 +176,19 @@ local function init(code,globVar_)
 		globVar.cfgFrameAudioSwitchF3K=system.pLoad("frameAudioSwitch")
 		globVar.cfgTimerResetSwitchF3K=system.pLoad("timerResetSwitch")
 		globVar.cfgFlightCountDownSwitchF3K=system.pLoad("flightCountDownSwitch")
-		globVar.cfgTargetTimeF3K=system.pLoad("adTargetTime",30)
+		globVar.cfgTargetTimeF3K=system.pLoad("adTargetTime",60)      --only for training - task
+		globVar.cfgTargetTimeF3K_TL=system.pLoad("adTargetTime",600)  --only for task TL
 		taskList={globVar.langF3K.A,globVar.langF3K.B,globVar.langF3K.C,globVar.langF3K.D,globVar.langF3K.E,
 				  globVar.langF3K.F,globVar.langF3K.G,globVar.langF3K.H,globVar.langF3K.I,globVar.langF3K.J,
-				  globVar.langF3K.K,globVar.langF3K.FF,globVar.langF3K.TS,globVar.langF3K.TF} --initialize the task list
+				  globVar.langF3K.K,globVar.langF3K.L,globVar.langF3K.M,globVar.langF3K.TF,globVar.langF3K.TS,globVar.langF3K.FF,globVar.langF3K.Dold} --initialize the task list
 		globVar.cfgAudioFlights = system.pLoad("audioFlights",{3,5,4,3,3,3})  -- number of audio output best flights in order for tasks F,G,H,I,J
+			
 		local deviceType = system.getDeviceType()
 		if(( deviceType == "JETI DC-24")or(deviceTypeF3K == "JETI DS-24")or(deviceTypeF3K == "JETI DS-12"))then
 			globVar.colorScreenF3K = true -- set display type
 		end
 	else
-		globVar.currentTaskF3K = 15 -- unload task lib
+		globVar.currentTaskF3K = 18 -- unload task lib
 	end
 	resetTask_(1)
 end
@@ -226,11 +237,12 @@ local function timerResetSwitchChanged(value)
   globVar.cfgTimerResetSwitchF3K=value
   system.pSave("timerResetSwitch",value)
 end
+
 local function taskChanged()
   globVar.currentTaskF3K=form.getValue(taskBox)
   resetTask_(1)
   system.pSave("currentTask",globVar.currentTaskF3K)
-  form.setTitle("Task "..taskCharF3K.."  "..taskList[globVar.currentTaskF3K])
+  form.setTitle("Task "..taskList[globVar.currentTaskF3K])
   form.reinit(globVar.initScreenIDF3K)
 end
 
@@ -243,7 +255,8 @@ local function storeTask_()
 	local modelName = system.getProperty("Model") 
 	tFileF3K = io.open("Apps\\F3K\\Logs\\"..fileName,"a")
 	if(tFileF3K ~= nil) then
-		local fTitle = tDateF3K.hour..":"..tDateF3K.min..":"..tDateF3K.sec.."     Task "..taskCharF3K.."  "..taskList[globVar.currentTaskF3K]
+		--local fTitle = tDateF3K.hour..":"..tDateF3K.min..":"..tDateF3K.sec.."     Task "..taskCharF3K.."  "..taskList[globVar.currentTaskF3K]
+		local fTitle = tDateF3K.hour..":"..tDateF3K.min..":"..tDateF3K.sec.."     Task "..taskList[globVar.currentTaskF3K]
 		io.write(tFileF3K,"--------------------------------------------------------------------\n")
 		io.write(tFileF3K,fTitle,"\n")
 		io.write(tFileF3K,globVar.langF3K.model,"      ",modelName,"\n")
@@ -327,27 +340,32 @@ local function tools_Screen()
 		form.addLabel({label=globVar.langF3K.frameTime,width=220})
 	frameBox = form.addIntbox(currentFrameTime,0,1200,0,0,10,frameTimeChanged)
 	end
-	if(globVar.currentTaskF3K<12)then
+	if((globVar.currentTaskF3K<12)or (globVar.currentTaskF3K == 15)or (globVar.currentTaskF3K == 17))then
 		--globVar. Assigned pre frame time except trainins task and free flight task
 		form.addRow(2)
 		form.addLabel({label=globVar.langF3K.preFrameTime,width=220})
 		form.addIntbox(globVar.cfgPreFrameTimeF3K,5,15,0,0,5,preFrameTimeChanged)
 	end
-	if(((globVar.currentTaskF3K>5) and (globVar.currentTaskF3K <11))or (globVar.currentTaskF3K == 13))then
-		-- number of audio output best flights in order for tasks F,G,H,I,J and ST
+	if(((globVar.currentTaskF3K>5) and (globVar.currentTaskF3K <11))or (globVar.currentTaskF3K == 15))then
+		-- number of audio output best flights in order for tasks F,G,H,I,J and TS
 	    local currentAudioFlights = globVar.cfgAudioFlights[globVar.currentTaskF3K - 5]
-		if(globVar.currentTaskF3K == 13)then
+		if(globVar.currentTaskF3K == 15)then
 			currentAudioFlights = globVar.cfgAudioFlights[6]
 		end
 		form.addRow(2)
 		form.addLabel({label=globVar.langF3K.audioFlights,width=220})
-	audioBox = form.addIntbox(currentAudioFlights,1,5,0,0,1,audioFlightsChanged)
+		audioBox = form.addIntbox(currentAudioFlights,1,5,0,0,1,audioFlightsChanged)
 	end
 	if(globVar.currentTaskF3K == 14) then -- Assigned flight times for TF (training flight task)
 		form.addRow(2)
 		form.addLabel({label=globVar.langF3K.target,width=220})
-		form.addIntbox(globVar.cfgTargetTimeF3K,30,200,0,0,10,targetTimeChanged)
+		form.addIntbox(globVar.cfgTargetTimeF3K,20,900,0,0,20,targetTimeChanged)
 	end
+	if(globVar.currentTaskF3K == 12) then -- Assigned flight times for Task L 
+		targetTimeChanged(600)
+		
+	end
+	
 	-- Assigned switch start frame time
 	form.addRow(2)
 	form.addLabel({label=globVar.langF3K.frameSwitch,width=220})
@@ -368,7 +386,7 @@ local function tools_Screen()
     form.addRow(2)
     form.addLabel({label=globVar.langF3K.timerResetSwitch,width=220})
     form.addInputbox(globVar.cfgTimerResetSwitchF3K,false,timerResetSwitchChanged)
-	if(globVar.currentTaskF3K==5)then -- poker 
+	if(globVar.currentTaskF3K==5) or (globVar.currentTaskF3K==8) or (globVar.currentTaskF3K==14)then -- poker / Task H
 		-- Assigned switch flight count down 
 		form.addRow(2)
 		form.addLabel({label=globVar.langF3K.flightCountDownSwitch,width=220})
@@ -382,7 +400,7 @@ end
 --------------------------------------------------------------------
 local function commonScreen()
 	if(task_lib ~= nil) then
-		form.setTitle("Task "..taskCharF3K.."  "..taskList[globVar.currentTaskF3K])
+		form.setTitle("Task "..taskList[globVar.currentTaskF3K])
 		form.setButton(2,":delete",ENABLED)
 		form.setButton(3,":file",ENABLED)
 		form.setButton(1,":tools",ENABLED)
@@ -397,7 +415,7 @@ local function printTelemetry()
 		local func = task_lib[5]  --screen() 
 		func() -- execute task specific screen handler
 	end	
-	local taskTxt ="Task "..taskCharF3K.."  "..taskList[globVar.currentTaskF3K]
+	local taskTxt ="Task "..taskList[globVar.currentTaskF3K]
 	lcd.drawText(10,130,taskTxt,FONT_MINI)
 	local frameLabel = "Powered by Geierwally for Jeti- "..globVar.F3K_Version.." "
 	lcd.drawText(290 - lcd.getTextWidth(FONT_MINI,frameLabel),145,frameLabel,FONT_MINI)

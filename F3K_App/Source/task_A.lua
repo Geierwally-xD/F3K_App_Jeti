@@ -270,7 +270,7 @@ local function task_A_flights() -- wait for start flight switch count preflight 
 			if(globVar.frameTimerF3K > flightTimesF3K)then
 				globVar.soundTimeF3K = math.modf(globVar.frameTimerF3K - flightTimesF3K) -- count down of remaining frame time for right start of next flight
 				audioCountDownF3K()
-			else -- remaining frame time not enough to improve next flight
+			elseif(globVar.frameTimerF3K < failedFlightsF3K[failedFlightIndexF3K][1])then -- remaining frame time not enough to improve next flight
 				if(alert == false)then
 					system.playFile("/Apps/F3K/Audio/"..lng.."/F3K_Alert.wav",AUDIO_QUEUE)
 					system.playFile("/Apps/F3K/Audio/"..lng.."/F3K_NoImpr.wav",AUDIO_QUEUE)

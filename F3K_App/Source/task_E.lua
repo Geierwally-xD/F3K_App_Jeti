@@ -1,7 +1,7 @@
 -- ############################################################################# 
 -- # DC/DS F3K Training - Lua application for JETI DC/DS transmitters  
 -- #
--- # Copyright (c) 2017, by Geierwally
+-- # Copyright (c) 2020, by Geierwally
 -- # All rights reserved.
 -- #
 -- # Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,8 @@
 -- #                       
 -- # V1.0.1 - Initial release of all specific functions of Task E 'Poker'
 -- # V1.0.3 - Bugfixing changed all global to local variables
--- #        - Moved all F3K Audio files into app specific F3K/audio folder       
+-- #        - Moved all F3K Audio files into app specific F3K/audio folder      
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng  
 -- #############################################################################
 
 local prevFrameAudioSwitchF3K = 0 --audio switch logic for output ramaining frame time
@@ -196,7 +197,9 @@ local function task_E_flights() -- wait for start flight switch count preflight 
 				flightTimesF3K = flightTimeF3K + globVar.frameTimerF3K -1
 				flightCountDownF3K = true -- count down started, set target time for flight depending on remaining frame time
 			elseif(1==system.getInputsVal(globVar.cfgFlightCountDownSwitchF3K)) then
-				flightTimesF3K = flightTimeF3K + 20 
+				
+				flightTimesF3K = math.modf(flightTimeF3K / 10) * 10 + 20
+				
 				flightCountDownF3K = true 
 			end	
 		end

@@ -1,7 +1,7 @@
 -- ############################################################################# 
 -- # DC/DS F3K Training - Lua application for JETI DC/DS transmitters  
 -- #
--- # Copyright (c) 2017, by Geierwally
+-- # Copyright (c) 2020, by Geierwally
 -- # All rights reserved.
 -- #
 -- # Redistribution and use in source and binary forms, with or without
@@ -46,7 +46,7 @@
 -- #                                                     TT 'Training Task' 
 -- # V1.0.3 - Bugfixing changed all global to local variables
 -- #        - Moved all F3K Audio files into app specific F3K/audio folder 
--- # V1.0.4 - Support of DS12 Color Display      
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng       
 -- #############################################################################
 
 --Configuration
@@ -56,7 +56,7 @@ local main_lib = nil  -- lua main script
 local initDelay = 0
 
 local globVar ={
-				F3K_Version="T1.0.4",
+				F3K_Version="V1.0.4",
 				mem = 0,
 				debugmem = 0,
 				initScreenIDF3K = 2, -- id of tool screen

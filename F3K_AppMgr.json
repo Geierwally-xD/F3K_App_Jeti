@@ -1,7 +1,7 @@
 {
 "F3K Training": {
     "author": "Geierwally",
-    "version": "V1.0.3",
+    "version": "V1.0.4",
     "previewImg": "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/img/Geierwally.jpg",
     "description": "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/README.md",
     "sourceFile": [
@@ -73,6 +73,8 @@
 	  "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/F3K_App/Apps/F3K/Tasks/task_I.lua",
 	  "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/F3K_App/Apps/F3K/Tasks/task_J.lua",
 	  "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/F3K_App/Apps/F3K/Tasks/task_K.lua",
+	  "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/F3K_App/Apps/F3K/Tasks/task_L.lua",
+	  "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/F3K_App/Apps/F3K/Tasks/task_M.lua",
 	  "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/F3K_App/Apps/F3K/Tasks/task_TF.lua",
 	  "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/F3K_App/Apps/F3K/Tasks/task_TS.lua",
 	  "https://raw.githubusercontent.com/Geierwally-xD/F3K_App_Jeti/master/F3K_App/Apps/F3K/lang/cz/locale.jsn",
@@ -138,6 +140,8 @@
       "/Apps/F3K/Audio/it",
       "/Apps/F3K/Audio/it",
       "/Apps/F3K/Audio/it",		  
+      "/Apps/F3K/Tasks",		  
+      "/Apps/F3K/Tasks",		  
       "/Apps/F3K/Tasks",		  
       "/Apps/F3K/Tasks",		  
       "/Apps/F3K/Tasks",		  

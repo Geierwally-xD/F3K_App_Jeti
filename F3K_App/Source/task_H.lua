@@ -1,7 +1,7 @@
 -- ############################################################################# 
 -- # DC/DS F3K Training - Lua application for JETI DC/DS transmitters  
 -- #
--- # Copyright (c) 2017, by Geierwally
+-- # Copyright (c) 2020, by Geierwally
 -- # All rights reserved.
 -- #
 -- # Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,8 @@
 -- #                       
 -- # V1.0.2 - Initial release of all specific functions of Task H '1,2,3,4 min target'
 -- # V1.0.3 - Bugfixing changed all global to local variables
--- #        - Moved all F3K Audio files into app specific F3K/audio folder       
+-- #        - Moved all F3K Audio files into app specific F3K/audio folder  
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng      
 -- #############################################################################
 
 local prevFrameAudioSwitchF3K = 0 --audio switch logic for output ramaining frame time
@@ -50,6 +51,8 @@ local flightTimesF3K = nil -- contains all flight times of the task in ms for co
 local preSwitchNextFlightF3K = false  -- logic for start next flight (stopp switch musst be pressed and released)
 local failedFlightIndexF3K = 1 -- current index of failed flight list
 local flightTimeF3K = 0
+local countTimeF3K = 0
+local countTimeTargetF3k = 0
 local breakTimeF3K = 0
 local failedFlightsF3K = nil --list of failed flights
 local goodFlightsF3K = nil --list of all good flights
@@ -83,18 +86,20 @@ local function taskInit(globVar_)
 	preSwitchNextFlightF3K = false  -- logic for start next flight (stopp switch musst be pressed and released)
 	failedFlightIndexF3K = 0 -- current index of failed flight list
 	flightTimeF3K = 0
+	countTimeF3K = 0
+	countTimeTargetF3K = 0
 	breakTimeF3K = 0
 	failedFlightsF3K = nil --list of failed flights
 	goodFlightsF3K = nil --list of all good flights
 	preSwitchTaskResetF3K = false --logic for reset task switch (for tasks with combined stopp and reset functionality e.g. task A and B)
 	flightCountDownF3K = false -- flight count down for poker task was switched
-    globVar.flightIndexOffsetScreenF3K = 0 -- for display if more than 8 flights in list
-    globVar.flightIndexScrollScreenF3K = 0 -- for scrolling up and down if more than 8 flights in list
+    	globVar.flightIndexOffsetScreenF3K = 0 -- for display if more than 8 flights in list
+    	globVar.flightIndexScrollScreenF3K = 0 -- for scrolling up and down if more than 8 flights in list
  	flightTimesTxtF3K = {"240s ","180s ","120s ","  60s "}
 	flightTimesF3K={240,180,120,60}
 	goodFlightsF3K = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}} --list of all good flights  flight time , break time
 	sumFlightList = {1,1,1,1,1} -- buble sort list indexes of flight list ordered by flight time
-    sumFlightIndex = 0
+    	sumFlightIndex = 0
 	sumAudioOutput = 0 -- helper for audio output flight times
 end
 
@@ -248,8 +253,27 @@ local function task_H_flights() -- wait for start flight switch count F3K time s
         remainingFlightTimeSecF3K = remainingFlightTimeF3K % 60
 
 		globVar.soundTimeF3K = math.modf(remainingFlightTimeF3K)
+		
+		
+		if(flightCountDownF3K == false)then
+			if(1==system.getInputsVal(globVar.cfgFlightCountDownSwitchF3K)) then			
+				countTimeTargetF3K  = math.modf(flightTimeF3K / 10) * 10 + 20			
+				flightCountDownF3K = true 
+			end
+		end
+		
+		if(countTimeTargetF3K > 0)then --count down flightend is active
+			countTimeF3K = countTimeTargetF3K-flightTimeF3K +1
+			globVar.soundTimeF3K = math.modf(countTimeF3K)
+		end
+	    
+		
+		
+		if (flightCountDownF3K == true )then		
+			audioCountDownF3K()
+			
 						-- audio output flight time in 10 s frame
-		if(globVar.frameTimerF3K > 45)then -- avoid overlapping frame and flight count down
+		elseif(globVar.frameTimerF3K > 45)then -- avoid overlapping frame and flight count down
 			if((globVar.soundTimeF3K%10==0)and(globVar.soundTimeF3K ~= globVar.prevSoundTimeF3K))then
 				if (system.isPlayback () == false) then
 					if(remainingFlightTimeMinF3K > 0) then
@@ -279,11 +303,17 @@ local function task_H_flights() -- wait for start flight switch count F3K time s
 			end				
 			sumFlightList[sumFlightIndex] = flightIndexF3K
 			sumTimerF3K = calcSumTime() -- increment sum timer
-			breakFlight = true
+			breakFlight = true		
+			
+			flightCountDownF3K = false 
+			countTimeTargetF3K = 0
+				
 		end
-
+		
+		
+		
 		if(breakFlight == true)then
-			if(flightIndexF3K == 20) then -- end of flight list reached finish task
+			if(flightIndexF3K == 4) then -- end of flight list reached finish task
 				system.playFile("/Apps/F3K/Audio/"..lng.."/F3K_Tend.wav",AUDIO_QUEUE)
 				taskStateF3K = 3
 			else
@@ -308,7 +338,7 @@ local function task_H_flights() -- wait for start flight switch count F3K time s
 		elseif(shortestFlight == 0)	then
 			shortestFlight = 1
 		end
-		if(goodFlightsF3K[sumFlightList[shortestFlight]][1]< globVar.frameTimerF3K)then --shortest flight is shorter than remaining frame time, continue 	
+		
 			breakTimeF3K = (globVar.currentTimeF3K - startBreakTimeF3K)/1000
 			if(globVar.frameTimerF3K==0)then-- frametimer expired finish task
 				system.playFile("/Apps/F3K/Audio/"..lng.."/F3K_Tend.wav",AUDIO_QUEUE)
@@ -327,18 +357,15 @@ local function task_H_flights() -- wait for start flight switch count F3K time s
 				end
 			else
 				if(1==system.getInputsVal(globVar.cfgStartFlightSwitchF3K)) then
-					onFlightF3K = true
-					flightCountDownF3K = false
+					onFlightF3K = true					
 					startFlightTimeF3K = globVar.currentTimeF3K
 					globVar.soundTimeF3K = 0
 					globVar.prevSoundTimeF3K = 1
+					
+					flightCountDownF3K = false
 				end	
 			end
-		else
-			-- remaining frame time not enough for next flight
-			system.playFile("/Apps/F3K/Audio/"..lng.."/F3K_Fend.wav",AUDIO_QUEUE)
-			taskStateF3K = 3
-		end	
+	
 	end
 	globVar.soundTimeF3K = math.modf(globVar.frameTimerF3K) -- count down of remaining frame time for right start of next flight
 	audioCountDownF3K()

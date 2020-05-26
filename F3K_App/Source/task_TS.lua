@@ -1,7 +1,7 @@
 -- ############################################################################# 
 -- # DC/DS F3K Training - Lua application for JETI DC/DS transmitters  
 -- #
--- # Copyright (c) 2017, by Geierwally
+-- # Copyright (c) 2020, by Geierwally
 -- # All rights reserved.
 -- #
 -- # Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,8 @@
 -- #                       
 -- # V1.0.2 - Initial release of all specific functions of Task TS 'trainings statistic'
 -- # V1.0.3 - Bugfixing changed all global to local variables
--- #        - Moved all F3K Audio files into app specific F3K/audio folder       
+-- #        - Moved all F3K Audio files into app specific F3K/audio folder 
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng       
 -- #############################################################################
 
 local prevFrameAudioSwitchF3K = 0 --audio switch logic for output ramaining frame time
@@ -92,8 +93,8 @@ local function taskInit(globVar_)
 	goodFlightsF3K = nil --list of all good flights
 	preSwitchTaskResetF3K = false --logic for reset task switch (for tasks with combined stopp and reset functionality e.g. task A and B)
 	flightCountDownF3K = false -- flight count down for poker task was switched
-	flightTimesTxtF3K = " 40s "
-	flightTimesF3K=40
+	flightTimesTxtF3K = " 60s "
+	flightTimesF3K=60
 	goodFlightsF3K = {{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}} --list of all good flights  flight time , break time, improve time
 	sumFlightList = {1,1,1,1} -- buble sort list indexes of flight list ordered by flight time
     sumFlightIndex = 0
