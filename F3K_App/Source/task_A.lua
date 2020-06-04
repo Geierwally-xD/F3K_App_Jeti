@@ -30,7 +30,8 @@
 -- #                       
 -- # V1.0.1 - Initial release of all specific functions of Task A 'last flight'
 -- # V1.0.3 - Bugfixing changed all global to local variables
--- #        - Moved all F3K Audio files into app specific F3K/audio folder       
+-- #        - Moved all F3K Audio files into app specific F3K/audio folder  
+-- # V1.0.5 - separate configuration from main function with dynamic storage management     
 -- #############################################################################
 
 
@@ -118,21 +119,7 @@ local function taskInit(globVar_)
 end
 
 local function frameTimeChanged(value,formIndex)
-	if (value > 600) then
-		value = 600
-	elseif (value < 420) then
-		value = 420
-	elseif (value == 430) then
-		value = 600
-	elseif (value == 590) then
-		value = 420
-	else
-		value = 600
-	end	
-	globVar.frameTimerF3K = value
-	globVar.cfgFrameTimeF3K[globVar.currentTaskF3K]=value
-  	form.setValue(formIndex,value)
-	system.pSave("frameTime",globVar.cfgFrameTimeF3K)
+    -- dummy the function is handeled in confF3K.lua
 end
 
 --------------------------------------------------------------------

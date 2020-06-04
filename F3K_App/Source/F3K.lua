@@ -46,7 +46,8 @@
 -- #                                                     TT 'Training Task' 
 -- # V1.0.3 - Bugfixing changed all global to local variables
 -- #        - Moved all F3K Audio files into app specific F3K/audio folder 
--- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng       
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng  
+-- # V1.0.5 - separate configuration from main function with dynamic storage management        
 -- #############################################################################
 
 --Configuration
@@ -56,11 +57,9 @@ local main_lib = nil  -- lua main script
 local initDelay = 0
 
 local globVar ={
-				F3K_Version="V1.0.4",
+				F3K_Version="T1.5.1",
 				mem = 0,
 				debugmem = 0,
-				initScreenIDF3K = 2, -- id of tool screen
-				taskScreenIDF3K = 1, -- id of task screen
 				currentFormF3K = nil, -- current display
 				langF3K={},
 				currentTaskF3K=12,    --Index tasklist of last training default is FF (free flights task)
@@ -81,6 +80,7 @@ local globVar ={
 				flightIndexOffsetScreenF3K = 0, -- for display if more than 8 flights in list
 				flightIndexScrollScreenF3K = 0, -- for scrolling up and down if more than 8 flights in list
 				cfgAudioFlights = nil, -- number of audio output best flights in order for tasks F,G,H,I,J
+                taskList = nil, --list of all training tasks
 				resetTask = function()
 					if(main_lib ~= nil) then
 						local func = main_lib[1] --resetTask_()

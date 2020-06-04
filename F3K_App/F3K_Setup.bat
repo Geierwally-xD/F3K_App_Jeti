@@ -1,4 +1,4 @@
-@REM Installation of F3K Training App V1.0.4 on Jeti Transmitters
+@REM Installation of F3K Training App T1.5.1 on Jeti Transmitters
 @echo off
 @echo ================================
 @echo connection  transmitter

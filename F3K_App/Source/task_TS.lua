@@ -31,7 +31,8 @@
 -- # V1.0.2 - Initial release of all specific functions of Task TS 'trainings statistic'
 -- # V1.0.3 - Bugfixing changed all global to local variables
 -- #        - Moved all F3K Audio files into app specific F3K/audio folder 
--- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng       
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Tengg   
+-- # V1.0.5 - separate configuration from main function with dynamic storage management    
 -- #############################################################################
 
 local prevFrameAudioSwitchF3K = 0 --audio switch logic for output ramaining frame time
@@ -130,13 +131,7 @@ local function frameTimeChanged(value,formIndex)
 end
 
 local function audioFlightsChanged(value,formIndex) -- number of audio output best flights
-	if (value > 3) then
-		value = 3
-	end	
-	sumAudioCounter = value
-	globVar.cfgAudioFlights[6]=value
-  	form.setValue(formIndex,value)
-	system.pSave("audioFlights",globVar.cfgAudioFlights)
+    -- dummy the function is handeled in confF3K.lua
 end
 
 local function calcSumTime()

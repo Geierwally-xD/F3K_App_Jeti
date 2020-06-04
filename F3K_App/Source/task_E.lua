@@ -31,7 +31,7 @@
 -- # V1.0.1 - Initial release of all specific functions of Task E 'Poker'
 -- # V1.0.3 - Bugfixing changed all global to local variables
 -- #        - Moved all F3K Audio files into app specific F3K/audio folder      
--- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng  
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Tengg  
 -- #############################################################################
 
 local prevFrameAudioSwitchF3K = 0 --audio switch logic for output ramaining frame time

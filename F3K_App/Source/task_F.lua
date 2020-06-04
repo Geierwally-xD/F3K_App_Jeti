@@ -29,6 +29,7 @@
 -- # either expressed or implied, of the FreeBSD Project.                    
 -- #                       
 -- # V1.0.2 - Initial release of all specific functions of Task F '3 out of 6'
+-- # V1.0.5 - separate configuration from main function with dynamic storage management
 -- #############################################################################
 
 local prevFrameAudioSwitchF3K = 0 --audio switch logic for output ramaining frame time
@@ -123,13 +124,7 @@ local function frameTimeChanged(value,formIndex)
 end
 
 local function audioFlightsChanged(value,formIndex) -- number of audio output best flights
-	if (value > 3) then
-		value = 3
-	end	
-	sumAudioCounter = value
-	globVar.cfgAudioFlights[globVar.currentTaskF3K-5]=value
-  	form.setValue(formIndex,value)
-	system.pSave("audioFlights",globVar.cfgAudioFlights)
+    -- dummy the function is handeled in confF3K.lua
 end
 
 local function calcSumTime()
