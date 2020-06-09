@@ -1,7 +1,7 @@
 -- ############################################################################# 
 -- # DC/DS F3K Training - Lua application for JETI DC/DS transmitters  
 -- #
--- # Copyright (c) 2020, by G. Teng
+-- # Copyright (c) 2020, by G. Tengg
 -- # All rights reserved.
 -- #
 -- # Redistribution and use in source and binary forms, with or without
@@ -64,6 +64,8 @@ local sumAudioOutput = 0 -- helper for audio output flight times
 --------------------------------------------------------------------
 local function taskInit(globVar_)
 	globVar = globVar_
+    globVar.author = nil
+    globVar.author = "G. Tengg" -- set author of task here   
 	taskStateF3K = 1
 	prevFrameAudioSwitchF3K = 0 --audio switch logic for output ramaining frame time
 	sumTimerF3K = 0 -- summary of valid flights

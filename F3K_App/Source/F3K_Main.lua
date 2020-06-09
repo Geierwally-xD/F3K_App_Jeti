@@ -94,7 +94,7 @@ local function resetTask_(unloadTask)
 		elseif(globVar.currentTaskF3K == 3)then -- all up last down
 			task_Path = "F3K/Tasks/task_C"
 			task_lib = require(task_Path)
-		elseif(globVar.currentTaskF3K == 4)then --ladder
+		elseif(globVar.currentTaskF3K == 4)then --2*5 min
 			task_Path = "F3K/Tasks/task_D"
 			task_lib = require(task_Path)
 		elseif(globVar.currentTaskF3K == 5)then --poker
@@ -136,7 +136,10 @@ local function resetTask_(unloadTask)
 		elseif(globVar.currentTaskF3K == 17)then -- free flight
 			task_Path = "F3K/Tasks/task_Dold"
 			task_lib = require(task_Path)
-		elseif(globVar.currentTaskF3K == 18)then -- empty task, necessary for loading on startup to avoid storage lack
+        elseif(globVar.currentTaskF3K == 18)then -- launch app
+			task_Path = "F3K/Tasks/task_LA"
+			task_lib = require(task_Path)    
+		elseif(globVar.currentTaskF3K == 19)then -- empty task, necessary for loading on startup to avoid storage lack
 			-- nothing to do
 		else	-- free flight is default task
 			globVar.currentTaskF3K = 16
@@ -154,7 +157,9 @@ local function resetTask_(unloadTask)
 		globVar.taskCharF3K = "FF"
 	elseif(globVar.currentTaskF3K == 17)then 
 		globVar.taskCharF3K = "Dold"
-	else
+	elseif(globVar.currentTaskF3K == 18)then 
+		globVar.taskCharF3K = "LA"
+  	else
 		globVar.taskCharF3K = "  "
 	end
   end -- unloadTask==1
@@ -181,7 +186,7 @@ local function init(code,globVar_)
             collectgarbage('collect')
         end
    	else
-		globVar.currentTaskF3K = 18 -- unload task lib
+		globVar.currentTaskF3K = 19 -- unload task lib
 	end
 	resetTask_(1)
 end
@@ -294,9 +299,10 @@ local function printTelemetry()
 	end	
 	local taskTxt ="Task "..globVar.taskList[globVar.currentTaskF3K]
 	lcd.drawText(10,130,taskTxt,FONT_MINI)
-	local frameLabel = "Powered by Geierwally for Jeti- "..globVar.F3K_Version.." "
+    local frameLabel = "Powered by "..globVar.author.." for Jeti- "..globVar.F3K_Version.." "
 	lcd.drawText(290 - lcd.getTextWidth(FONT_MINI,frameLabel),145,frameLabel,FONT_MINI)
-	local memTxt = "Storage: "..globVar.mem.."K"
+	--local memTxt = "Storage: "..globVar.mem.."K"
+    local memTxt = "STG: "..globVar.debugmem.." "
 	lcd.drawText(10,145,memTxt,FONT_MINI)
 end
 
@@ -307,9 +313,10 @@ local function printForm()
 		func() -- execute specific task handler
         func = task_lib[5]  --screen() 
 		func() -- execute task specific screen handler
-        local frameLabel = "Powered by Geierwally for Jeti- "..globVar.F3K_Version.." "
+        local frameLabel = "Powered by "..globVar.author.." for Jeti- "..globVar.F3K_Version.." "
         lcd.drawText(290 - lcd.getTextWidth(FONT_MINI,frameLabel),130,frameLabel,FONT_MINI)
-        local memTxt = "Storage: "..globVar.mem.."K"
+        --local memTxt = "Storage: "..globVar.mem.."K"
+        local memTxt = "STG: "..globVar.debugmem.." "
         lcd.drawText(10,130,memTxt,FONT_MINI)
 	end	
 end

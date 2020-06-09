@@ -46,7 +46,7 @@
 -- #                                                     TT 'Training Task' 
 -- # V1.0.3 - Bugfixing changed all global to local variables
 -- #        - Moved all F3K Audio files into app specific F3K/audio folder 
--- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Teng  
+-- # V1.0.4 - Support of DS12 Color Display and take over modifications by Gernot Tengg  
 -- # V1.0.5 - separate configuration from main function with dynamic storage management        
 -- #############################################################################
 
@@ -57,7 +57,8 @@ local main_lib = nil  -- lua main script
 local initDelay = 0
 
 local globVar ={
-				F3K_Version="T1.5.1",
+				F3K_Version="T1.5.2",
+                author="Geierwally",
 				mem = 0,
 				debugmem = 0,
 				currentFormF3K = nil, -- current display
@@ -81,6 +82,12 @@ local globVar ={
 				flightIndexScrollScreenF3K = 0, -- for scrolling up and down if more than 8 flights in list
 				cfgAudioFlights = nil, -- number of audio output best flights in order for tasks F,G,H,I,J
                 taskList = nil, --list of all training tasks
+				heightSensorId = 0,
+				heightParamId = 0,
+				varioSensorId = 0,
+				varioParamId = 0,
+				cfgStartHeightF3K=120, -- Start Height 
+				cfgTimeoffsetF3K=1000, -- Time offset for measurement after measurement switch was activated
 				resetTask = function()
 					if(main_lib ~= nil) then
 						local func = main_lib[1] --resetTask_()
@@ -134,12 +141,14 @@ local function loop()
 		local func = main_lib[4] --loop()
 		func() -- execute main loop
 	end	
-	globVar.debugmem = math.modf(collectgarbage('count'))
-	if (globVar.mem < globVar.debugmem) then
-		globVar.mem = globVar.debugmem
-	end
+        collectgarbage('collect')
+        globVar.debugmem = collectgarbage('count')
+	--globVar.debugmem = math.modf(collectgarbage('count'))
+	--if (globVar.mem < globVar.debugmem) then
+	--	globVar.mem = globVar.debugmem
+	--end
 end
  
 --------------------------------------------------------------------
 
-return { init=init, loop=loop, author="by Geierwally", version=F3K_Version,name="F3K Training"}
+return { init=init, loop=loop, author=globVar.author, version=globVar.F3K_Version,name="F3K Training"}

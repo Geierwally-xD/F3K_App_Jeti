@@ -86,6 +86,8 @@ end
 --------------------------------------------------------------------
 local function taskInit(globVar_)
 	globVar = globVar_
+    globVar.author = nil
+    globVar.author = "Geierwally" -- set author of task here    
 	taskStateF3K = 1
 	prevFrameAudioSwitchF3K = 0 --audio switch logic for output ramaining frame time
 	sumTimerF3K = 0 -- summary of valid flights

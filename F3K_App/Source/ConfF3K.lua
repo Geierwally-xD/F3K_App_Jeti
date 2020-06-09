@@ -39,6 +39,8 @@ local frameBox = nil
 local audioBox = nil
 local taskBox = nil
 local configRow =1		--row of first input box
+local sensorsAvailable = {}
+
 -------------------------------------------------------------------- 
 -- F3K config range check
 -------------------------------------------------------------------- 
@@ -145,6 +147,34 @@ local function taskChanged()
   form.reinit(globVar.currentFormF3K)
 end
 
+local function HeightChanged(value)   -- change flight target time for task TF training flights
+  globVar.cfgStartHeightF3K=value
+  system.pSave("adStartHeight",value)
+end
+
+local function TimeoffsetChanged(value) -- change flight target time for task TF training flights
+  globVar.cfgTimeoffsetF3K=value
+  system.pSave("adTimeoffset",value)
+end
+
+local function sensorChanged(value)
+  if value>0 then
+	local sensorId=sensorsAvailable[value].id
+    local paramId=sensorsAvailable[value].param
+	if(sensorsAvailable[value].label == "Hoehe")then
+    system.pSave("sensor_h",sensorId)
+    system.pSave("param_h",paramId)
+	globVar.heightSensorId = sensorId
+	globVar.heightParamId = paramId
+	elseif(sensorsAvailable[value].label == "Vario")then
+	system.pSave("sensor_vario",sensorId)
+    system.pSave("param_vario",paramId)
+	globVar.varioSensorId = sensorId
+	globVar.varioParamId = paramId
+	else
+	end
+  end      
+end
 -------------------------------------------------------------------- 
 -- F3K config page
 --------------------------------------------------------------------
@@ -158,7 +188,7 @@ local function F3K_Config()
 		local currentFrameTime = globVar.cfgFrameTimeF3K[globVar.currentTaskF3K]
 		form.addRow(2)
 		form.addLabel({label=globVar.langF3K.frameTime,width=220})
-	frameBox = form.addIntbox(currentFrameTime,0,1200,0,0,10,frameTimeChanged)
+	    frameBox = form.addIntbox(currentFrameTime,0,1200,0,0,10,frameTimeChanged)
 	end
 	if((globVar.currentTaskF3K<12)or (globVar.currentTaskF3K == 15)or (globVar.currentTaskF3K == 17))then
 		--globVar. Assigned pre frame time except trainins task and free flight task
@@ -185,6 +215,44 @@ local function F3K_Config()
 		targetTimeChanged(600)
 		
 	end
+    if(globVar.currentTaskF3K == 18) then -- sensor adjustments for Task LA launch application
+        sensorsAvailable = {}
+		local available = system.getSensors();
+		local list={}
+		local curIndex_height=-1
+		local curIndex_vario=-1
+		local descr = ""
+		for index,sensor in ipairs(available) do 
+			if(sensor.param == 0) then
+				descr = sensor.label
+				else
+				list[#list+1]=string.format("%s [%s]-%s",sensor.label,sensor.unit,descr)
+				sensorsAvailable[#sensorsAvailable+1] = sensor
+				if((sensor.id==globVar.heightSensorId and sensor.param==globVar.heightParamId) ) then
+					curIndex_height=#sensorsAvailable
+				end
+				if (sensor.id==globVar.varioSensorId and sensor.param==globVar.varioParamId) then
+					curIndex_vario=#sensorsAvailable
+				end
+			end 
+		end
+
+		form.addRow(2)
+		form.addLabel({label=globVar.langF3K.selectHeightSensor,width=220})
+		form.addSelectbox (list, curIndex_height,true,sensorChanged,{width=280})
+		
+		form.addRow(2)
+		form.addLabel({label=globVar.langF3K.selectVarioSensor,width=220})
+		form.addSelectbox (list, curIndex_vario,true,sensorChanged,{width=280})
+		
+		form.addRow(2)
+		form.addLabel({label=globVar.langF3K.timeoffset,width=220})
+		form.addIntbox(globVar.cfgTimeoffsetF3K,0,2000,1000,0,100,TimeoffsetChanged)
+		
+		form.addRow(2)
+		form.addLabel({label=globVar.langF3K.height,width=220})
+		form.addIntbox(globVar.cfgStartHeightF3K,0,200,120,0,10, HeightChanged)
+    end
 	
 	-- Assigned switch start frame time
 	form.addRow(2)
@@ -221,7 +289,7 @@ local function init(code,globVar_)
 	globVar = globVar_
     if(code == 0) then -- first init with default values
         globVar.currentTaskF3K = system.pLoad("currentTask",1)
-        globVar.cfgFrameTimeF3K = system.pLoad("frameTime",{600,600,3,600,600,600,600,600,600,600,600,600,900,600,600,600,600})--Frame time of all F3K training tasks in seconds
+        globVar.cfgFrameTimeF3K = system.pLoad("frameTime",{600,600,3,600,600,600,600,600,600,600,600,600,900,600,600,600,600,600})--Frame time of all F3K training tasks in seconds
         globVar.cfgPreFrameTimeF3K = system.pLoad("preFrameTime",10)
         globVar.cfgStartFrameSwitchF3K=system.pLoad("frameSwitch")
         globVar.cfgStartFlightSwitchF3K=system.pLoad("startFlightSwitch")
@@ -233,9 +301,14 @@ local function init(code,globVar_)
         globVar.cfgTargetTimeF3K_TL=system.pLoad("adTargetTime",600)  --only for task TL
 		globVar.taskList={globVar.langF3K.A,globVar.langF3K.B,globVar.langF3K.C,globVar.langF3K.D,globVar.langF3K.E,
 				  globVar.langF3K.F,globVar.langF3K.G,globVar.langF3K.H,globVar.langF3K.I,globVar.langF3K.J,
-				  globVar.langF3K.K,globVar.langF3K.L,globVar.langF3K.M,globVar.langF3K.TF,globVar.langF3K.TS,globVar.langF3K.FF,globVar.langF3K.Dold} --initialize the task list
+				  globVar.langF3K.K,globVar.langF3K.L,globVar.langF3K.M,globVar.langF3K.TF,globVar.langF3K.TS,globVar.langF3K.FF,globVar.langF3K.Dold,globVar.langF3K.LA} --initialize the task list
 		globVar.cfgAudioFlights = system.pLoad("audioFlights",{3,5,4,3,3,3})  -- number of audio output best flights in order for tasks F,G,H,I,J
-        
+		globVar.heightSensorId = system.pLoad("sensor_h",0) -- altitude sensor for task LA
+		globVar.heightParamId = system.pLoad("param_h",0)   -- altitude sensor for task LA
+		globVar.varioSensorId = system.pLoad("sensor_vario",0) -- vario sensor for task LA
+		globVar.varioParamId = system.pLoad("param_vario",0)   -- vario sensor for task LA
+		globVar.cfgStartHeightF3K=system.pLoad("adStartHeight",120)         
+		globVar.cfgTimeoffsetF3K=system.pLoad("adTimeoffset",1000)            
         local deviceType = system.getDeviceType()
         if(( deviceType == "JETI DC-24")or(deviceTypeF3K == "JETI DS-24")or(deviceTypeF3K == "JETI DS-12"))then
             globVar.colorScreenF3K = true -- set display type
@@ -249,6 +322,7 @@ end
 local function keyPressed(key)
 	if(key==KEY_MENU or key==KEY_ESC or key == KEY_5) then
 		globVar = nil
+        sensorsAvailable = {}
 		return(1) -- unload config
 	end
 end	
