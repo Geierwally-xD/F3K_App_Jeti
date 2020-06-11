@@ -342,9 +342,12 @@ end
 --------------------------------------------------------------------
 local function loop()
 	-- register the main window of F3K App
-		system.registerTelemetry(2,"F3K Training",4,printTelemetry)
-		system.registerForm(1,MENU_MAIN,"F3K Training",initF3K,keyPressedF3K,printForm);
-	
+	system.registerTelemetry(2,"F3K Training",4,printTelemetry)
+	system.registerForm(1,MENU_MAIN,"F3K Training",initF3K,keyPressedF3K,printForm);
+	if(task_lib ~= nil)then
+		local func = task_lib[4] --task()
+		func() -- execute specific task handler
+	end	
 end
  
 --------------------------------------------------------------------
