@@ -163,7 +163,7 @@ end
 local function task_L_Start() -- wait for start switch start 5s count down and start frame time
 	prevFrameAudioSwitchF3K = 1 -- lock audio output remaining frame time
 	if(taskStartSwitchedF3K == false)then
-		if((1==system.getInputsVal(globVar.cfgStartFrameSwitchF3K))and globVar.currentFormF3K ~= globVar.initScreenIDF3K )then
+		if(1==system.getInputsVal(globVar.cfgStartFrameSwitchF3K))then
 			taskStartSwitchedF3K = true
 			startFrameTimeF3K = globVar.currentTimeF3K
 			globVar.frameTimerF3K = 5 --preset with 5 seconds

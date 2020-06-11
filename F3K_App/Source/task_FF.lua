@@ -157,7 +157,7 @@ end
 -- eventhandler task FF Free Flights
 --------------------------------------------------------------------
 local function task_FF_Start() -- wait for start switch start 5s count down and start frame time
-	if((1==system.getInputsVal(globVar.cfgStartFrameSwitchF3K))and globVar.currentFormF3K ~= globVar.initScreenIDF3K )then
+	if(1==system.getInputsVal(globVar.cfgStartFrameSwitchF3K))then
 		startFlightTimeF3K = 0
 		startBreakTimeF3K = globVar.currentTimeF3K
 		taskStateF3K = 2

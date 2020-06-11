@@ -213,7 +213,7 @@ local function task_LA_Start() -- wait for start switch start 5s count down and 
 	
 	if(taskStartSwitchedF3K == false)then
 	
-		if((1==system.getInputsVal(globVar.cfgStartFrameSwitchF3K))and globVar.currentFormF3K ~= globVar.initScreenIDF3K )then
+		if(1==system.getInputsVal(globVar.cfgStartFrameSwitchF3K))then
 			taskStartSwitchedF3K = true
 			startFrameTimeF3K = globVar.currentTimeF3K
 			globVar.frameTimerF3K = 5 --preset with 5 seconds			
