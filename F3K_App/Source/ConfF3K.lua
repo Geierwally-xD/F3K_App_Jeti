@@ -157,22 +157,25 @@ local function TimeoffsetChanged(value) -- change flight target time for task TF
   system.pSave("adTimeoffset",value)
 end
 
-local function sensorChanged(value)
+local function AltSensChanged(value)
   if value>0 then
 	local sensorId=sensorsAvailable[value].id
     local paramId=sensorsAvailable[value].param
-	if(sensorsAvailable[value].label == "Hoehe")then
     system.pSave("sensor_h",sensorId)
     system.pSave("param_h",paramId)
 	globVar.heightSensorId = sensorId
 	globVar.heightParamId = paramId
-	elseif(sensorsAvailable[value].label == "Vario")then
+  end      
+end
+
+local function VarSensChanged(value)
+  if value>0 then
+	local sensorId=sensorsAvailable[value].id
+    local paramId=sensorsAvailable[value].param
 	system.pSave("sensor_vario",sensorId)
     system.pSave("param_vario",paramId)
 	globVar.varioSensorId = sensorId
 	globVar.varioParamId = paramId
-	else
-	end
   end      
 end
 -------------------------------------------------------------------- 
@@ -239,11 +242,11 @@ local function F3K_Config()
 
 		form.addRow(2)
 		form.addLabel({label=globVar.langF3K.selectHeightSensor,width=220})
-		form.addSelectbox (list, curIndex_height,true,sensorChanged,{width=280})
+		form.addSelectbox (list, curIndex_height,true,AltSensChanged,{width=280})
 		
 		form.addRow(2)
 		form.addLabel({label=globVar.langF3K.selectVarioSensor,width=220})
-		form.addSelectbox (list, curIndex_vario,true,sensorChanged,{width=280})
+		form.addSelectbox (list, curIndex_vario,true,VarSensChanged,{width=280})
 		
 		form.addRow(2)
 		form.addLabel({label=globVar.langF3K.timeoffset,width=220})
