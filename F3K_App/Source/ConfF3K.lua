@@ -277,10 +277,14 @@ local function F3K_Config()
     form.addRow(2)
     form.addLabel({label=globVar.langF3K.timerResetSwitch,width=220})
     form.addInputbox(globVar.cfgTimerResetSwitchF3K,false,timerResetSwitchChanged)
-	if(globVar.currentTaskF3K==5) or (globVar.currentTaskF3K==8) or (globVar.currentTaskF3K==14)then -- poker / Task H
+	if(globVar.currentTaskF3K==5) or (globVar.currentTaskF3K==8) or (globVar.currentTaskF3K==14) or (globVar.currentTaskF3K==18)then -- poker / Task H
 		-- Assigned switch flight count down 
 		form.addRow(2)
-		form.addLabel({label=globVar.langF3K.flightCountDownSwitch,width=220})
+		if(globVar.currentTaskF3K==18)then
+			form.addLabel({label=globVar.langF3K.MeasureSwitch,width=220})
+        else
+			form.addLabel({label=globVar.langF3K.flightCountDownSwitch,width=220})
+		end
 		form.addInputbox(globVar.cfgFlightCountDownSwitchF3K,false,flightCountDownSwitchChanged)
 	end	
     form.setFocusedRow (configRow)
