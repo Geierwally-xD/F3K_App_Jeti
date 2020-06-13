@@ -57,7 +57,7 @@ local main_lib = nil  -- lua main script
 local initDelay = 0
 
 local globVar ={
-				F3K_Version="T1.5.3",
+				F3K_Version="V1.0.5",
                 author="Geierwally",
 				mem = 0,
 				debugmem = 0,
