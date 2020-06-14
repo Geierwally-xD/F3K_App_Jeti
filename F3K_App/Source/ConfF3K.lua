@@ -126,6 +126,10 @@ local function flightCountDownSwitchChanged(value)
   globVar.cfgFlightCountDownSwitchF3K=value
   system.pSave("flightCountDownSwitch",value)
 end
+local function measureSwitchChanged(value)
+  globVar.cfgMeasureSwitchF3K=value
+  system.pSave("measureSwitch",value)
+end
 local function stoppFlightSwitchChanged(value)
   globVar.cfgStoppFlightSwitchF3K=value
   system.pSave("stoppFlightSwitch",value)
@@ -277,15 +281,17 @@ local function F3K_Config()
     form.addRow(2)
     form.addLabel({label=globVar.langF3K.timerResetSwitch,width=220})
     form.addInputbox(globVar.cfgTimerResetSwitchF3K,false,timerResetSwitchChanged)
-	if(globVar.currentTaskF3K==5) or (globVar.currentTaskF3K==8) or (globVar.currentTaskF3K==14) or (globVar.currentTaskF3K==18)then -- poker / Task H
+	if(globVar.currentTaskF3K==5) or (globVar.currentTaskF3K==8) or (globVar.currentTaskF3K==14) then -- poker / Task H
 		-- Assigned switch flight count down 
 		form.addRow(2)
-		if(globVar.currentTaskF3K==18)then
-			form.addLabel({label=globVar.langF3K.MeasureSwitch,width=220})
-        else
-			form.addLabel({label=globVar.langF3K.flightCountDownSwitch,width=220})
-		end
+		form.addLabel({label=globVar.langF3K.flightCountDownSwitch,width=220})
 		form.addInputbox(globVar.cfgFlightCountDownSwitchF3K,false,flightCountDownSwitchChanged)
+	end	
+	if(globVar.currentTaskF3K==18)then -- Task LA
+		-- Assigned switch measure of launch task 
+		form.addRow(2)
+		form.addLabel({label=globVar.langF3K.MeasureSwitch,width=220})
+		form.addInputbox(globVar.cfgMeasureSwitchF3K,false,measureSwitchChanged)
 	end	
     form.setFocusedRow (configRow)
 	configRow = 1
@@ -304,6 +310,7 @@ local function init(code,globVar_)
         globVar.cfgFrameAudioSwitchF3K=system.pLoad("frameAudioSwitch")
         globVar.cfgTimerResetSwitchF3K=system.pLoad("timerResetSwitch")
         globVar.cfgFlightCountDownSwitchF3K=system.pLoad("flightCountDownSwitch")
+        globVar.cfgMeasureSwitchF3K=system.pLoad("measureSwitch")
         globVar.cfgTargetTimeF3K=system.pLoad("adTargetTime",60)      --only for training - task
         globVar.cfgTargetTimeF3K_TL=system.pLoad("adTargetTime",600)  --only for task TL
 		globVar.taskList={globVar.langF3K.A,globVar.langF3K.B,globVar.langF3K.C,globVar.langF3K.D,globVar.langF3K.E,

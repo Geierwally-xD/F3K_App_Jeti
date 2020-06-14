@@ -47,7 +47,7 @@ local flightTimeF3K = 0
 local breakTimeF3K = 0
 local goodFlightsF3K = nil --list of all good flights
 local preSwitchTaskResetF3K = false --logic for reset task switch (for tasks with combined stopp and reset functionality e.g. task A and B)
-local flightCountDownF3K = false -- flight count down for poker task was switched
+local measureF3K = false -- measure was switched
 local flightFinishedF3K = true -- logic to avoid negative count of remaining flight time
 local sumAudioOutput = 0 -- helper for audio output flight times
 local lng=system.getLocale()
@@ -96,7 +96,7 @@ local function taskInit(globVar_)
 	breakTimeF3K = 0
 	goodFlightsF3K = nil --list of all good flights
 	preSwitchTaskResetF3K = false --logic for reset task switch (for tasks with combined stopp and reset functionality e.g. task A and B)
-	flightCountDownF3K = false -- flight count down for poker task was switched
+	measureF3K = false -- measure was switched
     globVar.flightIndexOffsetScreenF3K = 0 -- for display if more than 8 flights in list
     globVar.flightIndexScrollScreenF3K = 0 -- for scrolling up and down if more than 8 flights in list
     goodFlightsF3K = {{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}} -- flight time , break time, sum time
@@ -240,8 +240,8 @@ local function task_LA_Start() -- wait for start switch start 5s count down and 
 			end
 		end
 				
-		if( flightCountDownF3K ==true )then 		
-		flightCountDownF3K = false
+		if( measureF3K ==true )then 		
+			measureF3K = false
 		end
 			
 		if(globVar.frameTimerF3K == 0)then
@@ -276,17 +276,17 @@ local function task_LA_flights() -- wait for start flight switch count preflight
 					hoehe_max = height
 			end 
 		
-		if(1==system.getInputsVal(globVar.cfgFlightCountDownSwitchF3K) and flightCountDownF3K ==false and goodFlightsF3K[flightIndexF3K][1] == 0)then 
+		if(1==system.getInputsVal(globVar.cfgMeasureSwitchF3K) and measureF3K ==false and goodFlightsF3K[flightIndexF3K][1] == 0)then 
 		goodFlightsF3K[flightIndexF3K][1]=flightTimeF3K	
 		goodFlightsF3K[flightIndexF3K][3]=vario_max
 		
 		h_helper = height
 		measuretime = globVar.currentTimeF3K 
-		flightCountDownF3K = true	
+		measureF3K = true	
 		end
 				
 		
-		if (flightCountDownF3K == true and  globVar.currentTimeF3K > measuretime + meas_timeoffset  )  then
+		if (measureF3K == true and  globVar.currentTimeF3K > measuretime + meas_timeoffset  )  then
 		
 			if (hoehe_max > h_helper)then				
 				height_cor = hoehe_max + h_drift 				
@@ -296,14 +296,14 @@ local function task_LA_flights() -- wait for start flight switch count preflight
 			goodFlightsF3K[flightIndexF3K][2]=height_cor
 						
 			h_cal = false
-			flightCountDownF3K = false		
+			measureF3K = false		
 		end
 		
 	
 			
 		
 			
-		if(1==system.getInputsVal(globVar.cfgStoppFlightSwitchF3K) and flightCountDownF3K ~= true)then -- stopp flight was switched
+		if(1==system.getInputsVal(globVar.cfgStoppFlightSwitchF3K) and measureF3K ~= true)then -- stopp flight was switched
 			
 			if(flightIndexF3K == 20) then -- end of flight list reached finish task
 				system.playFile("/Apps/F3K/Audio/"..lng.."/F3K_Tend.wav",AUDIO_QUEUE)

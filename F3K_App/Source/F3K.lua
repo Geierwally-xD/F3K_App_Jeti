@@ -70,6 +70,7 @@ local globVar ={
 				cfgFrameAudioSwitchF3K=nil, --configured audio output switch for remaining frame time
 				cfgTimerResetSwitchF3K=nil, --switch for store current training and reset timers
 				cfgFlightCountDownSwitchF3K=nil, --switch for starting flight count down of poker tasks
+				cfgMeasureSwitchF3K=nil, --measure swith of launch task LA
 				cfgFrameTimeF3K=nil, --Frame time of all F3K training tasks in seconds
 				cfgPreFrameTimeF3K=10, -- count down time before start of frame timer
 				cfgTargetTimeF3K=30, -- flight target tim for TF task (training flights) 
