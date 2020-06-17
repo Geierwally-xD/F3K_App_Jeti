@@ -324,7 +324,7 @@ local function init(code,globVar_)
 		globVar.cfgStartHeightF3K=system.pLoad("adStartHeight",120)         
 		globVar.cfgTimeoffsetF3K=system.pLoad("adTimeoffset",1000)            
         local deviceType = system.getDeviceType()
-        if(( deviceType == "JETI DC-24")or(deviceTypeF3K == "JETI DS-24")or(deviceTypeF3K == "JETI DS-12"))then
+        if(( deviceType == "JETI DC-24")or(deviceTypeF3K == "JETI DS-24")or(deviceTypeF3K == "JETI DS-12")or(deviceTypeF3K == "JETI DC-16 II")or(deviceTypeF3K == "JETI DS-16 II"))then
             globVar.colorScreenF3K = true -- set display type
         end
     else    -- load the config window
