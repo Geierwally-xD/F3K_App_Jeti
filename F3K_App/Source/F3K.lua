@@ -110,10 +110,12 @@ local globVar ={
 local function init(code)
 	if(initDelay == 0)then
 		initDelay = system.getTimeCounter()
+		print ("set init delay 5S")
 	end	
 	if(main_lib ~= nil) then
 		local func = main_lib[2]
 		func(0,globVar) --init(0)
+		print ("load config call")
 	end
 end
 
@@ -125,7 +127,7 @@ local function loop()
 	 -- load current task
     if(main_lib == nil)then
 		init(0)
-		if((system.getTimeCounter() - initDelay > 5000)and(initDelay ~=0)) then
+		if((system.getTimeCounter() - initDelay > 10000)and(initDelay ~=0)) then
 			if(appLoaded == false)then
 				local memTxt = "max: "..globVar.mem.."K act: "..globVar.debugmem.."K"
 				print(memTxt)
@@ -133,7 +135,7 @@ local function loop()
 				if(main_lib ~= nil)then
 					appLoaded = true
 					init(0)
-					initDelay = 0
+					initDelay = 0					
 				end
 				collectgarbage()
 			end
