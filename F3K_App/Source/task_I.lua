@@ -300,7 +300,7 @@ local function task_I_flights() -- wait for start flight switch count preflight 
 		elseif(shortestFlight == 0)	then
 			shortestFlight = 1
 		end
-		if(goodFlightsF3K[sumFlightList[shortestFlight]][1]< globVar.frameTimerF3K)then --shortest flight is shorter than remaining frame time, continue 	
+		if(goodFlightsF3K[sumFlightList[shortestFlight]][1]< globVar.frameTimerF3K or sumFlightIndex < 3)then --shortest flight is shorter than remaining frame time, continue 	
 			if(globVar.frameTimerF3K == 0)then -- end of frame time reached
 				taskStateF3K = 3
 				system.playFile("/Apps/F3K/Audio/"..lng.."/F3K_Tend.wav",AUDIO_QUEUE)
